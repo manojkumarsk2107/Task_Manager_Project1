@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Tasks</title>
+</head>
+<body>
+
+<h1>{{ employee_name }} - My Assigned Tasks</h1>
+{% for task in tasks %}
+
+<hr>
+
+<h3>{{ task.title }}</h3>
+
+<p>
+Priority:
+{{ task.priority }}
+</p>
+
+<p>
+Status:
+{{ task.status }}
+</p>
+<p>
+
+<a href="/employee/task/{{ task.task_id }}/update/?status=Pending">
+Pending
+</a>
+
+|
+
+<a href="/employee/task/{{ task.task_id }}/update/?status=In Progress">
+In Progress
+</a>
+
+|
+
+<a href="/employee/task/{{ task.task_id }}/update/?status=Completed">
+Completed
+</a>
+
+</p>
+
+<p>
+Score:
+{{ task.assignment_score }}
+</p>
+
+{% empty %}
+
+<p>No tasks assigned.</p>
+
+{% endfor %}
+
+</body>
+</html>
