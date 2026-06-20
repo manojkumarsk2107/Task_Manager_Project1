@@ -35,8 +35,12 @@ def my_tasks(request):
 
     employee_name = request.session["employee_name"]
 
+    employee = Employee.objects.filter(
+        name=employee_name
+    ).first()
+
     tasks = Task.objects.filter(
-        assigned_employee=employee_name
+        assigned_employee=employee.employee_id
     )
 
     return render(
@@ -92,8 +96,35 @@ def update_task_status(request, task_id):
 
             else:
 
+                days_late = (
+                    today - task.deadline
+                ).days
+
+                penalty = 0
+
+                if days_late <= 3:
+                    penalty = 2
+
+                elif days_late <= 7:
+                    penalty = 5
+
+                else:
+                    penalty = 10
+
+                if task.priority == "P1":
+                    penalty += 5
+
+                elif task.priority == "P2":
+                    penalty += 3
+
+                elif task.priority == "P3":
+                    penalty += 2
+
+                elif task.priority == "P4":
+                    penalty += 1
+
                 employee.performance_score = max(
-                    employee.performance_score - 2,
+                    employee.performance_score - penalty,
                     0
                 )
 

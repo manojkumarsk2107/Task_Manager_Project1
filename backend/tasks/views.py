@@ -42,7 +42,7 @@ def create_task(request):
         best_employee, best_score = find_best_employee(task)
 
         if best_employee:
-            task.assigned_employee = best_employee.name
+            task.assigned_employee = best_employee.employee_id
             task.assignment_score = best_score
             task.save()
             best_employee.current_workload += 1

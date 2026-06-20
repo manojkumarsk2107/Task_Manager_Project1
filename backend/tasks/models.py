@@ -36,10 +36,9 @@ class Task(models.Model):
     max_length=20,
     default="Junior"
 )
-    assigned_employee = models.CharField(
-    max_length=100,
-    default=""
-)
+    assigned_employee = models.IntegerField(
+        default=0
+    )
 
     status = models.CharField(
         max_length=20,
