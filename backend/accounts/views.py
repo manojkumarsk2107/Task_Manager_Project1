@@ -77,9 +77,10 @@ def reports(request):
         Avg("assignment_score")
     )["assignment_score__avg"]
 
-    top_employee = Employee.objects.order_by(
-        "-performance_score"
-    ).first()
+    
+    top_employees = Employee.objects.order_by(
+    "-performance_score"
+    )[:5]
 
     return render(
         request,
@@ -90,6 +91,6 @@ def reports(request):
             "pending_tasks": pending_tasks,
             "in_progress_tasks": in_progress_tasks,
             "average_score": average_score,
-            "top_employee": top_employee
+            "top_employees": top_employees
         }
     )

@@ -73,6 +73,30 @@
     </div>
 
 </div>
+<hr>
+
+<h4>🏆 Employee Leaderboard</h4>
+
+<table class="table">
+
+    <tr>
+        <th>Employee</th>
+        <th>Performance</th>
+    </tr>
+
+    {% for emp in top_employees %}
+
+    <tr>
+
+        <td>{{ emp.name }}</td>
+
+        <td>{{ emp.performance_score }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
 
 </body>
 </html>

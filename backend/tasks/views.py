@@ -1,6 +1,10 @@
 from ai_engine.services import find_best_employee
 from django.shortcuts import render, redirect
 from .models import Task
+from ai_engine.nlp_extractor import (
+    extract_skills,
+    extract_position
+)
 
 
 def create_task(request):
@@ -16,6 +20,15 @@ def create_task(request):
         deadline = request.POST.get("deadline")
         required_skills = request.POST.get("required_skills")
         required_position = request.POST.get("required_position")
+
+        detected_skills = extract_skills(description)
+        detected_position = extract_position(description)
+
+        if detected_skills:
+            required_skills = ",".join(detected_skills)
+
+        if detected_position:
+            required_position = detected_position
         
 
         task = Task.objects.create(

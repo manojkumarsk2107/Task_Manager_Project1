@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from tasks.models import Task
 from .models import Employee
+from datetime import date
 
 
 def employee_login(request):
@@ -79,6 +80,23 @@ def update_task_status(request, task_id):
         if employee and employee.current_workload > 0:
 
             employee.current_workload -= 1
+
+            today = date.today()
+
+            if today <= task.deadline:
+
+                employee.performance_score = min(
+                    employee.performance_score + 5,
+                    100
+                )
+
+            else:
+
+                employee.performance_score = max(
+                    employee.performance_score - 2,
+                    0
+                )
+
             employee.save()
 
     return redirect("/employee/tasks/")

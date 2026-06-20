@@ -2,44 +2,73 @@
 <html>
 <head>
     <title>All Tasks</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<h1>All Tasks</h1>
+<body class="bg-light">
 
-<hr>
+<div class="container mt-5">
 
-{% for task in tasks %}
+    <div class="card shadow">
 
-<h3>{{ task.title }}</h3>
+        <div class="card-header bg-success text-white">
+            <h3>All Tasks</h3>
+        </div>
 
-<p>
-Assigned Employee:
-{{ task.assigned_employee }}
-</p>
+        <div class="card-body">
 
-<p>
-Priority:
-{{ task.priority }}
-</p>
+            <table class="table table-bordered table-hover">
 
-<p>
-Status:
-{{ task.status }}
-</p>
+                <thead class="table-dark">
 
-<p>
-AI Score:
-{{ task.assignment_score }}
-</p>
+                    <tr>
+                        <th>Task</th>
+                        <th>Employee</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>AI Score</th>
+                    </tr>
 
-<hr>
+                </thead>
 
-{% empty %}
+                <tbody>
 
-<p>No tasks available.</p>
+                {% for task in tasks %}
 
-{% endfor %}
+                    <tr>
+
+                        <td>{{ task.title }}</td>
+
+                        <td>{{ task.assigned_employee }}</td>
+
+                        <td>{{ task.priority }}</td>
+
+                        <td>{{ task.status }}</td>
+
+                        <td>{{ task.assignment_score }}</td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            No tasks available.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
