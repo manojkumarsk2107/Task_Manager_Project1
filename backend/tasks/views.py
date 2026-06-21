@@ -7,6 +7,8 @@ from ai_engine.nlp_extractor import (
 )
 from django.http import JsonResponse
 import json
+from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 
 
 
@@ -53,6 +55,8 @@ def create_task(request):
         return redirect("/manager/create-task/")
 
     return render(request, "tasks/create_task.html")
+
+@csrf_exempt
 def create_task_api(request):
 
     if request.method == "POST":
@@ -84,3 +88,39 @@ def create_task_api(request):
     return JsonResponse({
         "message": "Invalid Request"
     })
+def get_tasks_api(request):
+
+    tasks = Task.objects.all()
+
+    data = []
+
+    for task in tasks:
+
+        data.append({
+            "task_id": task.task_id,
+            "title": task.title,
+            "assigned_employee": task.assigned_employee,
+            "priority": task.priority,
+            "status": task.status,
+            "assignment_score": task.assignment_score
+        })
+
+    return JsonResponse(data, safe=False)
+def get_tasks_api(request):
+
+    tasks = Task.objects.all()
+
+    data = []
+
+    for task in tasks:
+
+        data.append({
+            "task_id": task.task_id,
+            "title": task.title,
+            "assigned_employee": task.assigned_employee,
+            "priority": task.priority,
+            "status": task.status,
+            "assignment_score": task.assignment_score
+        })
+
+    return JsonResponse(data, safe=False)
