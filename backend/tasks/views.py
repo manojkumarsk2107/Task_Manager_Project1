@@ -5,6 +5,9 @@ from ai_engine.nlp_extractor import (
     extract_skills,
     extract_position
 )
+from django.http import JsonResponse
+import json
+
 
 
 def create_task(request):
@@ -50,3 +53,34 @@ def create_task(request):
         return redirect("/manager/create-task/")
 
     return render(request, "tasks/create_task.html")
+def create_task_api(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+
+        task = Task.objects.create(
+            title=data["title"],
+            description=data["description"],
+            priority=data["priority"],
+            deadline=data["deadline"],
+            required_skills=data["required_skills"],
+            required_position=data["required_position"]
+        )
+
+        best_employee, best_score = find_best_employee(task)
+
+        if best_employee:
+
+            task.assigned_employee = best_employee.employee_id
+            task.assignment_score = best_score
+            task.save()
+
+        return JsonResponse({
+            "message": "Task Created",
+            "task_id": task.task_id
+        })
+
+    return JsonResponse({
+        "message": "Invalid Request"
+    })
