@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../services/api";
+import Navbar from "../components/Navbar";
 
 function CreateTask() {
 
@@ -37,125 +38,117 @@ function CreateTask() {
 
     } catch (error) {
 
-  console.log("ERROR:", error);
+      console.log("ERROR:", error);
 
-  if (error.response) {
-    console.log("STATUS:", error.response.status);
-    console.log("DATA:", error.response.data);
-  }
+      if (error.response) {
+        console.log("STATUS:", error.response.status);
+        console.log("DATA:", error.response.data);
+      }
 
-  alert("Task creation failed");
-}
+      alert("Task creation failed");
+    }
   };
 
   return (
-    <div className="container mt-5">
+    <>
+      <Navbar />
 
-      <div className="card shadow">
+      <div className="container mt-5">
 
-        <div className="card-header bg-primary text-white">
-          <h3>Create Task</h3>
-        </div>
+        <div className="card shadow">
 
-        <div className="card-body">
+          <div className="card-header bg-primary text-white">
+            <h3>Create Task</h3>
+          </div>
 
-          <form onSubmit={handleSubmit}>
+          <div className="card-body">
 
-            <div className="mb-3">
+            <form onSubmit={handleSubmit}>
 
-              <label className="form-label">
-                Task Title
-              </label>
+              <div className="mb-3">
+                <label className="form-label">
+                  Task Title
+                </label>
 
-              <input
-                type="text"
-                className="form-control"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+                <input
+                  type="text"
+                  className="form-control"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
 
-            </div>
+              <div className="mb-3">
+                <label className="form-label">
+                  Description
+                </label>
 
-            <div className="mb-3">
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+              </div>
 
-              <label className="form-label">
-                Description
-              </label>
+              <div className="mb-3">
+                <label className="form-label">
+                  Priority
+                </label>
 
-              <textarea
-                className="form-control"
-                rows="4"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
+                <select
+                  className="form-select"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
+                >
+                  <option>P1</option>
+                  <option>P2</option>
+                  <option>P3</option>
+                  <option>P4</option>
+                </select>
+              </div>
 
-            </div>
+              <div className="mb-3">
+                <label className="form-label">
+                  Required Skills
+                </label>
 
-            <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
+                />
+              </div>
 
-              <label className="form-label">
-                Priority
-              </label>
+              <div className="mb-3">
+                <label className="form-label">
+                  Deadline
+                </label>
 
-              <select
-                className="form-select"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
+                <input
+                  type="date"
+                  className="form-control"
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-success w-100"
               >
+                Create Task
+              </button>
 
-                <option>P1</option>
-                <option>P2</option>
-                <option>P3</option>
-                <option>P4</option>
+            </form>
 
-              </select>
-
-            </div>
-
-            <div className="mb-3">
-
-              <label className="form-label">
-                Required Skills
-              </label>
-
-              <input
-                type="text"
-                className="form-control"
-                value={skills}
-                onChange={(e) => setSkills(e.target.value)}
-              />
-
-            </div>
-
-            <div className="mb-3">
-
-              <label className="form-label">
-                Deadline
-              </label>
-
-              <input
-                type="date"
-                className="form-control"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-              />
-
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-success w-100"
-            >
-              Create Task
-            </button>
-
-          </form>
+          </div>
 
         </div>
 
       </div>
-
-    </div>
+    </>
   );
 }
 
