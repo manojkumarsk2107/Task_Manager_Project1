@@ -3,7 +3,8 @@ from .views import (
     manager_login,
     logout_manager,
     view_tasks,
-    reports
+    reports,
+    reports_api
 )
 
 urlpatterns = [
@@ -18,5 +19,10 @@ urlpatterns = [
     "manager/reports/",
     reports,
     name="reports"
+),
+path(
+    "api/reports/",
+    reports_api,
+    name="reports_api"
 ),
 ]

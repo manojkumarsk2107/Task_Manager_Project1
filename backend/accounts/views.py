@@ -3,6 +3,7 @@ from .models import Manager
 from tasks.models import Task
 from django.db.models import Avg
 from employees.models import Employee
+from django.http import JsonResponse
 
 
 def manager_login(request):
@@ -94,3 +95,36 @@ def reports(request):
             "top_employees": top_employees
         }
     )
+def reports_api(request):
+
+    total_tasks = Task.objects.count()
+
+    completed_tasks = Task.objects.filter(
+        status="Completed"
+    ).count()
+
+    pending_tasks = Task.objects.filter(
+        status="Pending"
+    ).count()
+
+    in_progress_tasks = Task.objects.filter(
+        status="In Progress"
+    ).count()
+
+    average_score = Task.objects.aggregate(
+        Avg("assignment_score")
+    )["assignment_score__avg"]
+
+    top_employee = Employee.objects.order_by(
+        "-performance_score"
+    ).first()
+
+    return JsonResponse({
+        "total_tasks": total_tasks,
+        "completed_tasks": completed_tasks,
+        "pending_tasks": pending_tasks,
+        "in_progress_tasks": in_progress_tasks,
+        "average_score": average_score or 0,
+        "top_employee":
+            top_employee.name if top_employee else "N/A"
+    })

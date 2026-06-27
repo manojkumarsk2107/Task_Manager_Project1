@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from tasks.models import Task
 from .models import Employee
 from datetime import date
+from django.http import JsonResponse
+
 
 
 def employee_login(request):
@@ -78,7 +80,7 @@ def update_task_status(request, task_id):
     ):
 
         employee = Employee.objects.filter(
-            name=task.assigned_employee
+            employee_id=task.assigned_employee
         ).first()
 
         if employee and employee.current_workload > 0:
@@ -131,3 +133,28 @@ def update_task_status(request, task_id):
             employee.save()
 
     return redirect("/employee/tasks/")
+
+def employee_tasks_api(request):
+
+    employee_id = request.GET.get("employee_id")
+
+    tasks = Task.objects.filter(
+        assigned_employee=employee_id
+    )
+
+    data = []
+
+    for task in tasks:
+
+        data.append({
+            "task_id": task.task_id,
+            "title": task.title,
+            "priority": task.priority,
+            "status": task.status,
+            "deadline": str(task.deadline)
+        })
+
+    return JsonResponse(
+        data,
+        safe=False
+    )

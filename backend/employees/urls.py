@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     employee_login,
     my_tasks,
-    update_task_status
+    update_task_status,
+    employee_tasks_api
 )
 urlpatterns = [
     path(
@@ -20,5 +21,10 @@ urlpatterns = [
     "employee/task/<int:task_id>/update/",
     update_task_status,
     name="update_task_status"
+    ),
+    path(
+    "api/employee/tasks/",
+    employee_tasks_api,
+    name="employee_tasks_api"
     ),
 ]
