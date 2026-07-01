@@ -3,7 +3,9 @@ from tasks.models import Task
 from .models import Employee
 from datetime import date
 from django.http import JsonResponse
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def employee_login(request):
@@ -158,3 +160,117 @@ def employee_tasks_api(request):
         data,
         safe=False
     )
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def update_task_status_api(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+
+        task = Task.objects.get(
+            task_id=data["task_id"]
+        )
+
+        status = data["status"]
+
+        old_status = task.status
+
+        task.status = status
+        task.save()
+
+        if (
+            status == "Completed"
+            and
+            old_status != "Completed"
+        ):
+
+            employee = Employee.objects.filter(
+                employee_id=task.assigned_employee
+            ).first()
+
+            if employee and employee.current_workload > 0:
+
+                employee.current_workload -= 1
+
+                today = date.today()
+
+                if today <= task.deadline:
+
+                    employee.performance_score = min(
+                        employee.performance_score + 5,
+                        100
+                    )
+
+                else:
+
+                    days_late = (
+                        today - task.deadline
+                    ).days
+
+                    penalty = 0
+
+                    if days_late <= 3:
+                        penalty = 2
+                    elif days_late <= 7:
+                        penalty = 5
+                    else:
+                        penalty = 10
+
+                    if task.priority == "P1":
+                        penalty += 5
+                    elif task.priority == "P2":
+                        penalty += 3
+                    elif task.priority == "P3":
+                        penalty += 2
+                    elif task.priority == "P4":
+                        penalty += 1
+
+                    employee.performance_score = max(
+                        employee.performance_score - penalty,
+                        0
+                    )
+
+                employee.save()
+
+        return JsonResponse({
+            "message": "Status Updated"
+        })
+
+    return JsonResponse({
+        "message": "Invalid Request"
+    })
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
+@csrf_exempt
+def employee_login_api(request):
+
+    if request.method == "POST":
+
+        data = json.loads(request.body)
+
+        employee = Employee.objects.filter(
+            email=data["email"],
+            password=data["password"]
+        ).first()
+
+        if employee:
+
+            return JsonResponse({
+                "success": True,
+                "employee_id": employee.employee_id,
+                "name": employee.name
+            })
+
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid Credentials"
+        })
+
+    return JsonResponse({
+        "message": "Invalid Request"
+    })
